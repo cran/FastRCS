@@ -6,11 +6,17 @@ NumStarts<-function(p,gamma=0.99,eps=0.5){
 	if(eps<=0)	stop("eps should be larger than 0.")	
 	ns0<-ceiling(log(1-gamma)/log(1-(1-(eps))^(p+1)))
 	ord<-10^floor(log10(ns0))
-	ceiling(ns0/ord)*ord
+	max(100,ceiling(ns0/ord)*ord)
 }
-FastRCS<-function(x,y,nsamp=NULL,alpha=0.5,seed=NULL){#x<-x0;y<-y0;nsamp<-ns;alpha<-0.5
+FastRCS<-function(x,y,nsamp=NULL,alpha=0.5,seed=1){#x<-x0;y<-y0;nsamp<-ns;alpha<-0.5
 	k1<-25;k0<-25;J<-3;
-	if(is.null(seed))	seed<-floor(runif(1,-2^31,2^31))
+	m1<-"seed should be in [0,2**31]."
+	if(!is.null(seed)){
+		if(!is.finite(seed))		stop(m1)
+		if(!is.numeric(seed))		stop(m1)
+		if(seed<0)			stop(m1)
+		if(is.na(as.integer(seed)))	stop(m1)
+	}
 	seed<-as.integer(seed)+1
 	x<-data.matrix(x)
 	y<-data.matrix(y)
@@ -32,19 +38,37 @@ FastRCS<-function(x,y,nsamp=NULL,alpha=0.5,seed=NULL){#x<-x0;y<-y0;nsamp<-ns;alp
 	k0<-max(k0,p+2);
 	k1<-max(k1,p+2);
 	objfunC<-1e3;
+	n2<-n1<-rep(0,h0);
 	icandid<-1:n-1
 	ni<-length(icandid)
-	fitd<-.C("fastrcs",as.integer(nrow(cx)),as.integer(ncol(cx)),as.integer(k0),as.single(cx),as.single(y),as.integer(k1),as.single(Dp),as.integer(nsamp),as.integer(J),as.single(objfunC),as.integer(seed),as.integer(icandid),as.integer(ni),PACKAGE="FastRCS")
+	fitd<-.C("fastrcs",as.integer(nrow(cx)),as.integer(ncol(cx)),as.integer(k0),as.single(cx),as.single(y),as.integer(k1),as.single(Dp),as.integer(nsamp),as.integer(J),as.single(objfunC),as.integer(seed),as.integer(icandid),as.integer(ni),as.integer(n1),as.integer(n2),as.integer(h0),PACKAGE="FastRCS")
 	outd<-as.numeric(fitd[[7]])
 	if(is.nan(outd)[1])	stop("too many singular subsets encoutered!")
-	best<-which(outd<=median(outd))
+	best<-fitd[[14]]#which(outd<=median(outd))
 	weit<-as.numeric((1:n)%in%best)
 	rawF<-lm(y~x,weights=weit)
+	rawF$resid<-y-cbind(1,x)%*%rawF$coef	
 	best<-which(abs(rawF$resid)<=quantile(abs(rawF$resid),h/n))
 	weit<-as.numeric((1:n)%in%best)
-	rawF<-lm(y~x,weights=weit);rawF$best<-best
+	rawF<-lm(y~x,weights=weit);
+	rawF$best<-best
+	rawF$resid<-y-cbind(1,x)%*%rawF$coef
 	weit<-as.numeric(abs(rawF$resid)/median(abs(rawF$resid))/qnorm(1-alpha/2)<=sqrt(qchisq(0.975,df=1)))
-       	rewF<-lm(y~x,weights=weit);rewF$best<-which(weit==1)	
-	list(alpha=alpha,nsamp=nsamp,obj=as.numeric(fitd[[10]]),raw.fit=rawF,rew.fit=rewF)
+       	rewF<-lm(y~x,weights=weit);
+	rewF$best<-which(weit==1)	
+	rewF$resid<-y-cbind(1,x)%*%rewF$coef
+	best<-fitd[[15]]#which(outd<=median(outd))
+	weit<-as.numeric((1:n)%in%best)
+	rawC<-lm(y~x,weights=weit)
+	best<-which(abs(rawC$resid)<=quantile(abs(rawC$resid),h/n))
+	weit<-as.numeric((1:n)%in%best)
+	rawC<-lm(y~x,weights=weit);
+	rawC$best<-best
+	rawC$resid<-y-cbind(1,x)%*%rawC$coef
+	weit<-as.numeric(abs(rawC$resid)/median(abs(rawC$resid))/qnorm(1-alpha/2)<=sqrt(qchisq(0.975,df=1)))
+       	rewC<-lm(y~x,weights=weit);
+	rewC$best<-which(weit==1)	
+	rewC$resid<-y-cbind(1,x)%*%rewC$coef
+	list(outd=outd,alpha=alpha,nsamp=nsamp,obj=as.numeric(fitd[[10]]),raw=rawF,rew=rewF,rawC=rawC,rewC=rewC)
 }
 quanf<-function(n,p,alpha)	return(floor(2*floor((n+p+1)/2)-n+2*(n-floor((n+p+1)/2))*alpha))

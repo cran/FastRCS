@@ -33,6 +33,6 @@ quanf                     Internal function used to compute the FastRCS regressi
 }
 \author{
 Kaveh Vakili [aut, cre],
-Maintainer: Kaveh Vakili <kaveh.vakili@wis.kuleuven.be>
+Maintainer: Kaveh Vakili <vakili.kaveh.email@gmail.com>
 }
 \keyword{package}
