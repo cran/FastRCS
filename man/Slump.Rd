@@ -35,6 +35,6 @@ p<-ncol(Slump)
 ns<-NumStarts(p=p,eps=(1-alpha)*4/5)
 Fit<-FastRCS(x=Slump[,-1],y=Slump[,1],nsamp=ns,seed=1)
 yname<-"Standardized robust residuals"
-plot(abs(Fit$raw$resid)/median(abs(Fit$raw$resid)*1.4826),pch=16,ylab=yname)
+plot(abs(Fit$rew$resid)/summary(Fit$rew)$sigma,pch=16,ylab=yname)
 }
 \keyword{datasets}

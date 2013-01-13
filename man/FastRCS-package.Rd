@@ -26,6 +26,11 @@ quanf                     Internal function used to compute the FastRCS regressi
                        outlyingness index.
 }
 }
+\references{
+	Vakili, K. and Schmitt, E. (2014).
+	Finding Regression Outliers With FastRCS.
+	(http://arxiv.org/abs/1307.4834)
+}
 \author{
 Kaveh Vakili [aut, cre],
 Maintainer: Kaveh Vakili <kaveh.vakili@wis.kuleuven.be>

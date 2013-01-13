@@ -78,6 +78,11 @@ results1+rep(-1,p)
 #should be the same:
 results2
 }
+\references{
+	Vakili, K. and Schmitt, E. (2014).
+	Finding Regression Outliers With FastRCS.
+	(http://arxiv.org/abs/1307.4834)
+}
 \author{
 	Kaveh Vakili
 }

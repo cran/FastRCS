@@ -9,28 +9,21 @@ NumStarts<-function(p,gamma=0.99,eps=0.5){
 	ceiling(ns0/ord)*ord
 }
 FastRCS<-function(x,y,nsamp=NULL,alpha=0.5,seed=NULL){#x<-x0;y<-y0;nsamp<-ns;alpha<-0.5
-	k1<-25
-	k0<-25
-	J<-3;
+	k1<-25;k0<-25;J<-3;
 	if(is.null(seed))	seed<-floor(runif(1,-2^31,2^31))
-	seed<-as.integer(seed)
+	seed<-as.integer(seed)+1
 	x<-data.matrix(x)
 	y<-data.matrix(y)
 	na.x<-complete.cases(cbind(x,y))
 	if(!is.numeric(alpha))	stop("alpha should be numeric")
-	if(alpha<0.5 | alpha>=1)	stop("alpha should be in (0.5,1(.")
+	if(alpha<0.5 | alpha>=1)stop("alpha should be in (0.5,1(.")
 	if(sum(na.x)!=nrow(x))  stop("Your data contains NA.")
 	if(nrow(x)<(5*ncol(x))) stop("n<5p. You need more observations")
 	cx<-cbind(1,x)
 	n<-nrow(cx)
+	if(nrow(unique(cbind(x,y)))<n)	stop("Your dataset contains duplicated rows. Please remove them.") 
 	p<-ncol(cx)
-	chechidenc<-rep(NA,p)
-	for(i in 1:p)	chechidenc[i]<-min(colMedians(abs(sweep(cx[,-i,drop=FALSE],1,cx[,i],FUN="-"))))
-	if(min(chechidenc)<1e-8){
-		wones<-which(chechidenc<1e-8)
-		stop(paste0("Columns ",wones[1]," and ",wones[2]," contain at least n/2 identicial observations."))
-	}
-	if(p<2)		stop("Univariate RCS is not implemented.")
+	if(p<2)			stop("Univariate RCS is not implemented.")
 	if(p>25)		stop("FastRCS only works for dimensions <=25.")
 	if(is.null(nsamp)) 	nsamp<-NumStarts(p,eps=(1-alpha)) 
 	h<-quanf(n=n,p=p,alpha=alpha)
@@ -41,22 +34,17 @@ FastRCS<-function(x,y,nsamp=NULL,alpha=0.5,seed=NULL){#x<-x0;y<-y0;nsamp<-ns;alp
 	objfunC<-1e3;
 	icandid<-1:n-1
 	ni<-length(icandid)
-	fit<-.C("fastrcs",as.integer(nrow(cx)),as.integer(ncol(cx)),as.integer(k0),as.single(cx),as.single(y),as.integer(k1),as.single(Dp),as.integer(nsamp),as.integer(J),as.single(objfunC),as.integer(seed),as.integer(icandid),as.integer(ni),PACKAGE="FastRCS")
-	outd<-as.numeric(fit[[7]])
-	if(sum(is.nan(outd))>0)	stop("too many singular subsets encoutered!")
+	fitd<-.C("fastrcs",as.integer(nrow(cx)),as.integer(ncol(cx)),as.integer(k0),as.single(cx),as.single(y),as.integer(k1),as.single(Dp),as.integer(nsamp),as.integer(J),as.single(objfunC),as.integer(seed),as.integer(icandid),as.integer(ni),PACKAGE="FastRCS")
+	outd<-as.numeric(fitd[[7]])
+	if(is.nan(outd)[1])	stop("too many singular subsets encoutered!")
 	best<-which(outd<=median(outd))
 	weit<-as.numeric((1:n)%in%best)
-	raw<-lm(y~x,weights=weit)
-	best<-which(abs(raw$resid)<=quantile(abs(raw$resid),h/n))
+	rawF<-lm(y~x,weights=weit)
+	best<-which(abs(rawF$resid)<=quantile(abs(rawF$resid),h/n))
 	weit<-as.numeric((1:n)%in%best)
-	raw<-lm(y~x,weights=weit)
-	raw$best<-best
-	vdist<-abs(raw$resid)
-	s0<-median(vdist)*1.4826;
-	vdist<-vdist/s0;
-       	wt<-as.numeric(vdist<=2.5)
-       	rew<-lm(y~x,weights=wt)
-	rew$best<-which(wt==1);	
-	list(alpha=alpha,nsamp=nsamp,obj=as.numeric(fit[[10]]),raw.fit=raw,rew.fit=rew)
+	rawF<-lm(y~x,weights=weit);rawF$best<-best
+	weit<-as.numeric(abs(rawF$resid)/(median(abs(rawF$resid))*1.4826)<=2.5)
+       	rewF<-lm(y~x,weights=weit);rewF$best<-which(weit==1)	
+	list(alpha=alpha,nsamp=nsamp,obj=as.numeric(fitd[[10]]),raw.fit=rawF,rew.fit=rewF)
 }
 quanf<-function(n,p,alpha)	return(floor(2*floor((n+p+1)/2)-n+2*(n-floor((n+p+1)/2))*alpha))
