@@ -10,17 +10,17 @@ DontGetKicked
 }
 \format{
   \describe{
-	\item{\code{VehBCost}}{Acquisition cost paid for the vehicle at time of purchase}
-	\item{\code{MMRAcquisitionAuctionAveragePrice}}{Acquisition price for this vehicle in average condition at time of purchase}
-	\item{\code{MMRAcquisitonRetailCleanPrice}}{Acquisition price for this vehicle in the above Average condition at time of purchase}	
-	\item{\code{MMRAcquisitionRetailAveragePrice}}{Acquisition price for this vehicle in the retail market in average condition at time of purchase}
-	\item{\code{MMRAcquisitonRetailCleanPrice}}{Acquisition price for this vehicle in the retail market in above average condition at time of purchase}
-	\item{\code{MMRCurrentAuctionAveragePrice}}{Acquisition price for this vehicle in average condition as of current day}
-	\item{\code{MMRCurrentAuctionCleanPrice}}{Acquisition price for this vehicle in the above condition as of current day}
-	\item{\code{MMRCurrentRetailAveragePrice}}{Acquisition price for this vehicle in the retail market in average condition as of current day}
-	\item{\code{MMRCurrentRetailCleanPrice}}{Acquisition price for this vehicle in the retail market in above average condition as of current day}
-	\item{\code{WarrantyCost}}{Warranty price (term=36month  and millage=36K)}
-	\item{\code{VehOdo}}{The vehicles odometer reading}
+	\item{\code{VehBCost}}{Acquisition cost paid for the vehicle at time of purchase.}
+	\item{\code{MMRAcquisitionAuctionAveragePrice}}{Acquisition price for this vehicle in average condition at time of purchase.}
+	\item{\code{MMRAcquisitonRetailCleanPrice}}{Acquisition price for this vehicle in the above Average condition at time of purchase.}	
+	\item{\code{MMRAcquisitionRetailAveragePrice}}{Acquisition price for this vehicle in the retail market in average condition at time of purchase.}
+	\item{\code{MMRAcquisitonRetailCleanPrice}}{Acquisition price for this vehicle in the retail market in above average condition at time of purchase.}
+	\item{\code{MMRCurrentAuctionAveragePrice}}{Acquisition price for this vehicle in average condition as of current day.}
+	\item{\code{MMRCurrentAuctionCleanPrice}}{Acquisition price for this vehicle in above condition as of current day.}
+	\item{\code{MMRCurrentRetailAveragePrice}}{Acquisition price for this vehicle on the retail market in average condition as of current day.}
+	\item{\code{MMRCurrentRetailCleanPrice}}{Acquisition price for this vehicle on the retail market in above average condition as of current day.}
+	\item{\code{WarrantyCost}}{Warranty price (term=36month  and millage=36K).}
+	\item{\code{VehOdo}}{The vehicle's odometer reading.}
   }
 }
 \source{
@@ -32,9 +32,8 @@ Don't Get Kicked!.
 data(DontGetKicked)
 alpha<-0.5
 p<-ncol(DontGetKicked)
-ns<-NumStarts(p=p,eps=(1-alpha)*4/5)
-Fit<-FastRCS(x=DontGetKicked[,-1],y=DontGetKicked[,1],nsamp=ns,seed=1)
-yname<-"Standardized robust residuals"
-plot(abs(Fit$rew$resid)/summary(Fit$rew)$sigma,pch=16,ylab=yname)
+ns<-numStarts(p=p,eps=(1-alpha)*4/5)
+Fit<-FastRCS(x=DontGetKicked[,-1],y=DontGetKicked[,1],nSamp=ns,seed=1)
+plot(Fit)
 }
 \keyword{datasets}

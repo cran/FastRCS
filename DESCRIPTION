@@ -1,20 +1,20 @@
 Package: FastRCS
 Type: Package
-Title: R package to compute the FastRCS outlyingness index.
-Version: 0.0.4
+Title: FastRCS Robust Fit of Multivariable Linear Regression Model
+Version: 0.0.5
 Date: 2013-01-13
-Depends: matrixStats
+Depends: R (>= 3.1.1), matrixStats
 Suggests: mvtnorm
 LinkingTo: Rcpp, RcppEigen
 SystemRequirements: C++11
-Description: The FastRCS outlyingness index is an algorithm for finding outliers for the linear regression model. 
+Description: The FastRCS algorithm of Vakili and Schmitt (2014) for robust fit of the multivariable linear regression model and outliers detection.
 License: GPL (>= 2)
 LazyLoad: yes
 Authors@R: person("Kaveh", "Vakili", email =
         "vakili.kaveh.email@gmail.com", role = c("aut", "cre"))
 Author: Kaveh Vakili [aut, cre]
 Maintainer: Kaveh Vakili <vakili.kaveh.email@gmail.com>
-Packaged: 2014-09-08 09:47:36 UTC; kaveh
+Packaged: 2014-11-13 14:34:29 UTC; kaveh
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-09-08 13:21:00
+Date/Publication: 2014-11-14 00:03:20

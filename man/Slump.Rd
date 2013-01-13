@@ -3,9 +3,11 @@
 \title{Concrete Slump Test}
 \description{
 Concrete is a highly complex material. The slump flow of concrete is not 
-only determined by the water content, but that is also influenced by other concrete 
-ingredients. The observations for which  the values
- of either the slag and fly ash variable is exactly zero have 
+only determined by the water content, but also other concrete 
+ingredients. This data set contains results from two experiements conducted years apart on concrete mixtures, giving two groups of observations. 
+The first 35 observations belong to the first set of experiments, while the last 24 belong to the second set. 
+28-day compressive strength is measured as the response, with 7 other variables consituting the regressors.
+The observations for which  the values of either the slag or fly ash variable is exactly zero have 
 been excluded.
 }
 \usage{
@@ -32,9 +34,8 @@ Cement and Concrete Composites, Vol.29, No. 6, 474--480.
 data(Slump)
 alpha<-0.5
 p<-ncol(Slump)
-ns<-NumStarts(p=p,eps=(1-alpha)*4/5)
-Fit<-FastRCS(x=Slump[,-1],y=Slump[,1],nsamp=ns,seed=1)
-yname<-"Standardized robust residuals"
-plot(abs(Fit$rew$resid)/summary(Fit$rew)$sigma,pch=16,ylab=yname)
+ns<-numStarts(p=p,eps=(1-alpha)*4/5)
+Fit<-FastRCS(x=Slump[,-1],y=Slump[,1],nSamp=ns,seed=1)
+plot(Fit)
 }
 \keyword{datasets}
