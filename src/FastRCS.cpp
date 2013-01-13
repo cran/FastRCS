@@ -53,9 +53,10 @@ VectorXi SampleR(const int m,const int p){
 }
 VectorXf FindLine(const MatrixXf& xSub,const VectorXf& ySub,const int h){
 	const int p=xSub.cols();
-	VectorXi QIndexp=SampleR(h,p);
-	VectorXf bt=VectorXf::Ones(p);
-	MatrixXf A(p,p);
+	VectorXi  QIndexp(p);
+	VectorXf  bt=VectorXf::Ones(p);
+	QIndexp=SampleR(h,p);
+	MatrixXf  A(p,p);
 	for(int i=0;i<p;i++){
 		A.row(i)=xSub.row(QIndexp(i));
 		bt(i)=ySub(QIndexp(i));
@@ -63,7 +64,9 @@ VectorXf FindLine(const MatrixXf& xSub,const VectorXf& ySub,const int h){
 	return(A.lu().solve(bt));
 }
 VectorXf OneProj(const MatrixXf& x,const VectorXf& y,const MatrixXf& xSub,VectorXf& ySub,const int h,const VectorXi& RIndex,const int h_m){
-	VectorXf praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs2();
+	const int n=x.rows();
+	VectorXf praj(n);
+	praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs2();
 	VectorXf prej(h);
 	for(int i=0;i<h;i++)	prej(i)=praj(RIndex(i));
 	float prem=prej.head(h).mean(),tol=1e-7;
@@ -82,12 +85,13 @@ VectorXf OneProj(const MatrixXf& x,const VectorXf& y,const MatrixXf& xSub,Vector
 	return praj/=prem;
 }
 float SubsetRankFun(const MatrixXf& x,const VectorXf& y,const MatrixXf& xSub,const VectorXf& ySub,const int h,const VectorXi& RIndex){
-	VectorXf praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs2();
-	VectorXf proj=praj;
+	const int n=x.rows();
+	VectorXf praj(n);
 	VectorXf prej(h);
-	nth_element(proj.data(),proj.data()+h,proj.data()+proj.size());	
+	praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs2();
 	for(int i=0;i<h;i++)	prej(i)=praj(RIndex(i));
-	float prem=proj.head(h).mean(), fin=(prem>1e-7)?(prej.head(h).mean()/prem):(1.0);
+	nth_element(praj.data(),praj.data()+h,praj.data()+praj.size());	
+	float prem=praj.head(h).mean(),fin=(prem>1e-7)?(prej.head(h).mean()/prem):(1.0);
 	return fin;
 }
 float Main(MatrixXf& x,VectorXf& y,const int k0,const int J,const int k1,VectorXf& dP,const int h_m,VectorXi& samset){
@@ -96,7 +100,7 @@ float Main(MatrixXf& x,VectorXf& y,const int k0,const int J,const int k1,VectorX
 	VectorXf ySub(h_m);
 	VectorXi RIndex(n);
 	VectorXf fin(k1);
-	VectorXi hl;
+	VectorXi hl(J+1);
 	RIndex.head(h)=SampleR(ni,h);			//draws random p-subset
 	for(int i=0;i<h;i++){
 		xSub.row(i)=x.row(samset(RIndex(i)));			

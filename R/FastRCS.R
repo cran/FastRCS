@@ -43,7 +43,7 @@ FastRCS<-function(x,y,nsamp=NULL,alpha=0.5,seed=NULL){#x<-x0;y<-y0;nsamp<-ns;alp
 	best<-which(abs(rawF$resid)<=quantile(abs(rawF$resid),h/n))
 	weit<-as.numeric((1:n)%in%best)
 	rawF<-lm(y~x,weights=weit);rawF$best<-best
-	weit<-as.numeric(abs(rawF$resid)/(median(abs(rawF$resid))*1.4826)<=2.5)
+	weit<-as.numeric(abs(rawF$resid)/median(abs(rawF$resid))/qnorm(1-alpha/2)<=sqrt(qchisq(0.975,df=1)))
        	rewF<-lm(y~x,weights=weit);rewF$best<-which(weit==1)	
 	list(alpha=alpha,nsamp=nsamp,obj=as.numeric(fitd[[10]]),raw.fit=rawF,rew.fit=rewF)
 }

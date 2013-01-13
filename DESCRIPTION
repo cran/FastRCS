@@ -1,7 +1,7 @@
 Package: FastRCS
 Type: Package
 Title: R package to compute the FastRCS outlyingness index.
-Version: 0.0.2
+Version: 0.0.3
 Date: 2013-01-13
 Depends: matrixStats
 Suggests: mvtnorm
@@ -13,7 +13,7 @@ Authors@R: person("Kaveh", "Vakili", email =
         "kaveh.vakili@wis.kuleuven.be", role = c("aut", "cre"))
 Author: Kaveh Vakili [aut, cre]
 Maintainer: Kaveh Vakili <kaveh.vakili@wis.kuleuven.be>
-Packaged: 2014-02-19 16:59:46 UTC; kaveh
+Packaged: 2014-04-24 09:42:22 UTC; kaveh
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2014-02-19 18:28:01
+Date/Publication: 2014-04-24 14:49:02
