@@ -1,4 +1,4 @@
-numStarts<-function(p,gamma=0.99,eps=0.5){
+FRCSnumStarts<-function(p,gamma=0.99,eps=0.5){
 	if(p>25)	stop("p too large.")
 	if(gamma>=1)	stop("gamma should be smaller than 1.")
 	if(gamma<=0)	stop("gamma should be larger than 0.")
@@ -31,14 +31,15 @@ FastRCS<-function(x,y,nSamp=NULL,alpha=0.5,seed=1){#x<-x0;y<-y0;nSamp<-ns;alpha<
 	p<-ncol(cx)
 	if(p<2)			stop("Univariate RCS is not implemented.")
 	if(p>25)		stop("FastRCS only works for dimensions <=25.")
-	if(is.null(nSamp)) 	nSamp<-numStarts(p,eps=(1-alpha)) 
-	h<-quanf(n=n,p=p,alpha=alpha)
+	if(is.null(nSamp)) 	nSamp<-FRCSnumStarts(p,eps=(1-alpha)) 
+	h1<-min(n-1,quanf(n=n,p=p,alpha=alpha))
 	h0<-quanf(n=n,p=p,alpha=0.5);
 	Dp<-rep(1.00,n);
 	k0<-max(k0,p+2);
 	k1<-max(k1,p+2);
 	objfunC<-1e3;
-	n2<-n1<-rep(0,h0);
+	n1<-rep(0,h0);
+	n2<-rep(0,h1)
 	icandid<-1:n-1
 	ni<-length(icandid)
 	fitd<-.C("fastrcs",
@@ -58,17 +59,18 @@ FastRCS<-function(x,y,nSamp=NULL,alpha=0.5,seed=1){#x<-x0;y<-y0;nSamp<-ns;alpha<
 		as.integer(n1),		#14
 		as.integer(n2),		#15
 		as.integer(h0),		#16
+		as.integer(h1),		#17
 		PACKAGE="FastRCS")
 	outd<-as.numeric(fitd[[7]])
 	if(is.nan(outd)[1])	stop("too many singular subsets encoutered!")
 	best<-fitd[[15]]#which(outd<=median(outd))
 	weit<-as.numeric((1:n)%in%best)
 	rawC<-lm(y~x,weights=weit)	
-	weit<-as.numeric(abs(rawC$resid)/median(abs(rawC$resid))/qnorm(1-alpha/2)<=sqrt(qchisq(0.975,df=1)))
+	weit<-as.numeric(abs(rawC$resid)/quantile(abs(rawC$resid),h1/n)/qnorm(1-alpha/2)<=sqrt(qchisq(0.975,df=1)))
        	FinalFit<-lm(y~x,weights=weit);
 	FinalFit$scale<-sqrt(sum(FinalFit$resid[weit==1]**2)/FinalFit$df)
-	A1 <- list(alpha=alpha,nSamp=nSamp,obj=as.numeric(fitd[[10]]), rawBest = fitd[[14]], rawDist=fitd[[7]],  
-	best = which(weit==1), coefficients = FinalFit$coef, fitted.values = FinalFit$fitted.values,residuals = FinalFit$residuals ,  rank = FinalFit$rank, weights= FinalFit$weights, df.residual = FinalFit$df.residual,scale=FinalFit$scale)
+	A1<-list(alpha=alpha,nSamp=nSamp,obj=as.numeric(fitd[[10]]),rawBest=fitd[[14]],rawDist=fitd[[7]],  
+	best=which(weit==1),coefficients=FinalFit$coef,fitted.values=FinalFit$fitted.values,residuals=FinalFit$residuals,  rank=FinalFit$rank,weights=FinalFit$weights,df.residual=FinalFit$df.residual,scale=FinalFit$scale)
 	  class(A1) <-"FastRCS"
 	  return(A1)
 }

@@ -1,12 +1,11 @@
-\name{DontGetKicked}
-\alias{DontGetKicked}
+\name{Lemons}
+\alias{Lemons}
 \title{Sales Data for the Chrysler Town \& Country}
 \description{
-  A data frame with the subset of the 'Don't Get Kicked!'
- dataset corresponding to sales of the Chrysler Town \& Country. 
+ Sales data for the Chrysler Town \& Country. 
 }
 \usage{
-DontGetKicked
+Lemons
 }
 \format{
   \describe{
@@ -23,17 +22,12 @@ DontGetKicked
 	\item{\code{VehOdo}}{The vehicle's odometer reading.}
   }
 }
-\source{
-Kaggle Data Challenge (2012). 
-Don't Get Kicked!. 
-\url{http://www.kaggle.com/c/DontGetKicked}.
-}
 \examples{
-data(DontGetKicked)
+data(Lemons)
 alpha<-0.5
-p<-ncol(DontGetKicked)
-ns<-numStarts(p=p,eps=(1-alpha)*4/5)
-Fit<-FastRCS(x=DontGetKicked[,-1],y=DontGetKicked[,1],nSamp=ns,seed=1)
+p<-ncol(Lemons)
+ns<-FRCSnumStarts(p=p,eps=(1-alpha)*4/5)
+Fit<-FastRCS(x=Lemons[,-1],y=Lemons[,1],nSamp=ns,seed=1)
 plot(Fit)
 }
 \keyword{datasets}

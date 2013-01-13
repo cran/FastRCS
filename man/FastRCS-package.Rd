@@ -20,7 +20,7 @@ Index:
 \preformatted{
 FastRCS                 Function to compute the FastRCS regression outlyingness
                        index.
-NumStarts                 Internal function used to compute the FastRCS regression
+FRCSnumStarts                 Internal function used to compute the FastRCS regression
                        outlyingness index.
 plot.FastRCS		Robust Diagnostic Plots For FastRCS.
 quanf                     Internal function used to compute the FastRCS regression
