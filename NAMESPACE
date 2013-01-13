@@ -1,0 +1,5 @@
+useDynLib(FastRCS)
+import("matrixStats")
+export("NumStarts")
+export("FastRCS")
+export("quanf")

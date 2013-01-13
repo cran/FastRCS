@@ -1,0 +1,14 @@
+0593cac0bee2a7b7275013b53265904c *DESCRIPTION
+aa31003b33628c8167cf83e657c0ed14 *NAMESPACE
+ea90b10f10adfd879bf19e354c0926a4 *R/FastRCS.R
+a2fdfa508e48b05bfa93843fa418085b *data/DontGetKicked.txt.gz
+0b01c1b4d4108e15f46a805074911423 *data/Slump.txt.gz
+2b8675921e24350e42fefbe02a9fd6d0 *man/DontGetKicked.Rd
+5d27b5fa94634d6f3052c92e7d0aec93 *man/FastRCS-package.Rd
+df7cd02e3775a1a02d6b4f7ffc6b0b13 *man/FastRCS.Rd
+27c1ef291052f7d0fc2204aab92495a8 *man/NumStarts.Rd
+d0e5f6743465751e1418994ebb7bbd4d *man/Slump.Rd
+1510c484349136e98fa372af94226d91 *man/quanf.Rd
+d527331112b2354d1c6ea10ab9c1bfbd *src/FastRCS.cpp
+5b01a3508e647404ec8f566903ea49d4 *src/Makevars
+a68f199e32889b4dfd181da114dc6adc *src/Makevars.win
