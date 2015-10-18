@@ -45,4 +45,4 @@ plot(results)
 }
 \keyword{hplot}
 \keyword{robust}
-\keyword{multivariate}
+\keyword{regression}

@@ -8,7 +8,7 @@ FRCSnumStarts<-function(p,gamma=0.99,eps=0.5){
 	ord<-10^floor(log10(ns0))
 	max(100,ceiling(ns0/ord)*ord)
 }
-FastRCS<-function(x,y,nSamp=NULL,alpha=0.5,seed=1){#x<-x0;y<-y0;nSamp<-ns;alpha<-0.5
+FastRCS<-function(x,y,nSamp=NULL,alpha=0.5,seed=1,intercept=1){#x<-x0;y<-y0;nSamp<-ns;alpha<-0.5
 	k1<-25;k0<-25;J<-3;
 	m1<-"seed should be an integer in [0,2**31]."
 	if(!is.null(seed)){
@@ -25,7 +25,11 @@ FastRCS<-function(x,y,nSamp=NULL,alpha=0.5,seed=1){#x<-x0;y<-y0;nSamp<-ns;alpha<
 	if(alpha<0.5 | alpha>=1)stop("alpha should be in (0.5,1(.")
 	if(sum(na.x)!=nrow(x))  stop("Your data contains NA.")
 	if(nrow(x)<(5*ncol(x))) stop("n<5p. You need more observations")
-	cx<-cbind(1,x)
+	if(intercept){
+		cx<-cbind(1,x)
+	} else {
+		cx<-x
+	}
 	n<-nrow(cx)
 	if(nrow(unique(cbind(x,y)))<n)	stop("Your dataset contains duplicated rows. Please remove them.") 
 	p<-ncol(cx)

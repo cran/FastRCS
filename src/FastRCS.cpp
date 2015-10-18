@@ -74,7 +74,7 @@ VectorXf FindLine(const MatrixXf& xSub,const VectorXf& ySub,const int h){
 VectorXf OneProj(const MatrixXf& x,const VectorXf& y,const MatrixXf& xSub,VectorXf& ySub,const int h,const VectorXi& RIndex,const int h_m){
 	const int n=x.rows();
 	VectorXf praj(n);
-	praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs();
+	praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs2();
 	float prem=0.0f,tol=1e-8;
 	for(int i=0;i<h;i++)	prem+=praj(RIndex(i));
 	prem=prem/(float)h;
@@ -96,7 +96,7 @@ float SubsetRankFun(const MatrixXf& x,const VectorXf& y,const MatrixXf& xSub,con
 	const int n=x.rows();
 	VectorXf praj(n);
 	VectorXf prej(h);
-	praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs();
+	praj=((x*FindLine(xSub,ySub,h)).array()-y.array()).array().abs2();
 	for(int i=0;i<h;i++)	prej(i)=praj(RIndex(i));
 	nth_element(praj.data(),praj.data()+h,praj.data()+praj.size());	
 	float prem=praj.head(h).mean(),fin=(prem>1e-7)?(prej.head(h).mean()/prem):(1.0);
@@ -136,7 +136,7 @@ void CStep(VectorXi& dI,const MatrixXf& x,const VectorXf& y,const int h,const in
 	ColPivHouseholderQR<MatrixXf> QR(xSub.topRows(h0));
 	m_cf=QR.solve(ySub.head(h0));
 	VectorXf dP(n);
-	dP=((x*m_cf).array()-y.array()).abs();
+	dP=((x*m_cf).array()-y.array()).abs2();
 	w1=std::numeric_limits<float>::max();
 	while(w2){	
 		dI.setLinSpaced(n,0,n-1);
@@ -145,10 +145,10 @@ void CStep(VectorXi& dI,const MatrixXf& x,const VectorXf& y,const int h,const in
 		for(i=0;i<h;i++) 	ySub(i)=y(dI(i));
 		HouseholderQR<MatrixXf> QR(xSub);
 		m_cf=QR.solve(ySub);
-		dP=((x*m_cf).array()-y.array()).abs();
+		dP=((x*m_cf).array()-y.array()).abs2();
 		w0=w1;
 		j++;
-		w1=log(((xSub*m_cf).array()-ySub.array()).abs().sum()/(float)(h-1));
+		w1=log(((xSub*m_cf).array()-ySub.array()).abs2().sum()/(float)(h-1));
 		(w0-w1<1e-3 | j>10)?(w2=0):(w2=1);
 	}
 } 

@@ -1,8 +1,8 @@
 \name{FastRCS}
 \alias{FastRCS}
-\title{Computes the FastRCS multivariate outlyingness index.}
+\title{Computes the FastRCS outlyingness index for regression.}
 \usage{
-  FastRCS(x,y,nSamp,alpha=0.5,seed=1)
+  FastRCS(x,y,nSamp,alpha=0.5,seed=1,intercept=1)
 }
 \arguments{
   \item{x}{A numeric n (n>5*p) by p (p>1) matrix or data frame. Should 
@@ -17,6 +17,8 @@
 	 i.e., \code{"h=quanf(alpha,n,p)"}.  Allowed
           values are between 0.5 and 1 and the default is 0.5.}
 \item{seed}{starting value for random generator. A positive integer. Default is seed = 1}
+	\item{intercept}{If true, a model with constant term will be estimated; otherwise no constant term will be included. Default is intercept=TRUE.}
+
 }
 \value{
 \item{nSamp}{The value of nSamp used.}
@@ -115,6 +117,6 @@ results2
 \author{
 	Kaveh Vakili
 }
-\keyword{multivariate}
+\keyword{regression}
 \keyword{robust}
 

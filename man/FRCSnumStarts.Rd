@@ -27,7 +27,7 @@ FRCSnumStarts(p=3,gamma=0.99,eps=0.4)
 \author{
 Kaveh Vakili
 }
-\keyword{multivariate}
+\keyword{regression}
 \keyword{robust}
 
 

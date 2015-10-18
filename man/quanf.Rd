@@ -25,7 +25,7 @@ quanf(p=3,n=500,alpha=0.5)
 \author{
 Kaveh Vakili
 }
-\keyword{multivariate}
+\keyword{regression}
 \keyword{robust}
 
 

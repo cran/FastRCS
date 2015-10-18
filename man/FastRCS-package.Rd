@@ -1,4 +1,5 @@
 \name{FastRCS-package}
+\alias{FastPCS-package}
 \docType{package}
 \title{Code to compute the FastRCS regression outlyingness index.}
 \description{
