@@ -149,7 +149,7 @@ void CStep(VectorXi& dI,const MatrixXf& x,const VectorXf& y,const int h,const in
 		w0=w1;
 		j++;
 		w1=log(((xSub*m_cf).array()-ySub.array()).abs2().sum()/(float)(h-1));
-		(w0-w1<1e-3 | j>10)?(w2=0):(w2=1);
+		((w0-w1<1e-3) | (j>10))?(w2=0):(w2=1);
 	}
 } 
 extern "C"{

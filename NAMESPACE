@@ -1,4 +1,4 @@
-useDynLib(FastRCS)
+useDynLib(FastRCS, .registration = TRUE)
 S3method(plot,FastRCS)
 import("matrixStats")
 export("FRCSnumStarts")
